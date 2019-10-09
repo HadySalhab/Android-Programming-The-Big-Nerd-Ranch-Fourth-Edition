@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     private var currentIndex = 0
+    private var score =0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +41,12 @@ class MainActivity : AppCompatActivity() {
 
         trueButton.setOnClickListener { view: View ->
             checkAnswer(true)
-            updateIsAnswered()
+
         }
 
         falseButton.setOnClickListener { view: View ->
             checkAnswer(false)
-            updateIsAnswered()
+
         }
 
         nextButton.setOnClickListener {
@@ -94,6 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
+        updateIsAnswered()
         trueButton.setEnabled(false)
         falseButton.setEnabled(false)
         val correctAnswer = questionBank[currentIndex].answer
@@ -102,10 +104,22 @@ class MainActivity : AppCompatActivity() {
         } else {
             R.string.incorrect_toast
         }
+        if(userAnswer==correctAnswer){
+            score++
+        }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
             .show()
+        showQuizResult()
     }
     private fun updateIsAnswered(){
         questionBank[currentIndex].isAnswered=true;
+    }
+    private fun showQuizResult(){
+        questionBank.forEach {question:Question->
+            if(!question.isAnswered){
+                return@showQuizResult
+            }
+        }
+        Toast.makeText(this,"Result: ${score}/${questionBank.size}",Toast.LENGTH_SHORT).show()
     }
 }

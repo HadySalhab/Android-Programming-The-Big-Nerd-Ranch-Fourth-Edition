@@ -40,14 +40,23 @@ class MainActivity : AppCompatActivity() {
 
         trueButton.setOnClickListener { view: View ->
             checkAnswer(true)
+            updateIsAnswered()
         }
 
         falseButton.setOnClickListener { view: View ->
             checkAnswer(false)
+            updateIsAnswered()
         }
 
         nextButton.setOnClickListener {
             currentIndex = (currentIndex + 1) % questionBank.size
+            if(questionBank[currentIndex].isAnswered==true){
+                trueButton.setEnabled(false)
+                falseButton.setEnabled(false)
+            }else{
+                trueButton.setEnabled(true)
+                falseButton.setEnabled(true)
+            }
             updateQuestion()
         }
 
@@ -85,6 +94,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
+        trueButton.setEnabled(false)
+        falseButton.setEnabled(false)
         val correctAnswer = questionBank[currentIndex].answer
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
@@ -93,5 +104,8 @@ class MainActivity : AppCompatActivity() {
         }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
             .show()
+    }
+    private fun updateIsAnswered(){
+        questionBank[currentIndex].isAnswered=true;
     }
 }

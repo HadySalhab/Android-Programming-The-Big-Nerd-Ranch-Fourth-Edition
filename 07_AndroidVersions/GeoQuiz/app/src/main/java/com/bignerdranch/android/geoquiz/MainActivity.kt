@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
+    private var cheatFrequency = 0
 
 
     private val quizViewModel: QuizViewModel by lazy {
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         cheatButton.setOnClickListener { view ->
             // Start CheatActivity
             val answerIsTrue = quizViewModel.currentQuestionAnswer
-            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue,cheatFrequency)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val options = ActivityOptions
@@ -89,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_CHEAT) {
             quizViewModel.isCheater =
                 data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+            cheatFrequency++
         }
     }
 

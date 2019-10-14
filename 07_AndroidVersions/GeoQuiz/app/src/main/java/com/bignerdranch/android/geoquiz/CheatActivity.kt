@@ -12,12 +12,14 @@ import android.widget.TextView
 const val EXTRA_ANSWER_SHOWN = "com.bignerdranch.android.geoquiz.answer_shown"
 private const val EXTRA_ANSWER_IS_TRUE =
     "com.bignerdranch.android.geoquiz.answer_is_true"
-
+private var mCheatFrequency:Int=0
 class CheatActivity : AppCompatActivity() {
+
 
     private lateinit var answerTextView: TextView
     private lateinit var showAnswerButton: Button
     private lateinit var apiTextView:TextView
+    private lateinit var cheatTextView: TextView
 
     private var answerIsTrue = false
 
@@ -26,6 +28,8 @@ class CheatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_cheat)
         apiTextView =  findViewById(R.id.textvie)
         apiTextView.setText("API LEVEL: ${Build.VERSION.SDK_INT}")
+        cheatTextView = findViewById(R.id.cheat_token)
+        cheatTextView.setText("Cheat: ${mCheatFrequency}/3")
 
         answerIsTrue = intent.getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false)
         answerTextView = findViewById(R.id.answer_text_view)
@@ -38,6 +42,9 @@ class CheatActivity : AppCompatActivity() {
             answerTextView.setText(answerText)
             setAnswerShownResult(true)
         }
+        if (mCheatFrequency>=3){
+            showAnswerButton.isEnabled=false
+        }
     }
 
     private fun setAnswerShownResult(isAnswerShown: Boolean) {
@@ -48,9 +55,11 @@ class CheatActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun newIntent(packageContext: Context, answerIsTrue: Boolean): Intent {
+        fun newIntent(packageContext: Context, answerIsTrue: Boolean,cheatFrequency:Int): Intent {
+            mCheatFrequency = cheatFrequency
             return Intent(packageContext, CheatActivity::class.java).apply {
                 putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue)
+
             }
         }
     }

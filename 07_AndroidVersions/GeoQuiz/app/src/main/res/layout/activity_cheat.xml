@@ -25,7 +25,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/show_answer_button"/>
-
+    <TextView
+        android:id="@+id/cheat_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        tools:text="Cheat: 1/3" />
 
     <TextView
         android:id="@+id/textvie"

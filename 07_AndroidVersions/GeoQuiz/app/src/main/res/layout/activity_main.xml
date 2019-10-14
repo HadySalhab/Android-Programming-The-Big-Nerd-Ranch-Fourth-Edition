@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:text="@string/false_button"/>
 
+
     </LinearLayout>
 
     <Button
@@ -46,5 +47,6 @@
         android:text="@string/next_button"
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="4dp"/>
+
 
 </LinearLayout>

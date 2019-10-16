@@ -54,6 +54,7 @@ class CrimeListFragment : Fragment() {
 
         private lateinit var crime: Crime
 
+
         private val titleTextView: TextView = itemView.findViewById(R.id.crime_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.crime_date)
 
@@ -67,6 +68,8 @@ class CrimeListFragment : Fragment() {
             dateTextView.text = this.crime.date.toString()
         }
 
+
+
         override fun onClick(v: View) {
             Toast.makeText(context, "${crime.title} clicked!", Toast.LENGTH_SHORT)
                 .show()
@@ -75,9 +78,20 @@ class CrimeListFragment : Fragment() {
 
     private inner class CrimeAdapter(var crimes: List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-                : CrimeHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
+        override fun getItemViewType(position: Int): Int {
+            when (crimes[position].isSerious){
+                true->return@getItemViewType 1
+                false->return@getItemViewType 0
+            }
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
+            val view :View = when(viewType){
+                1 -> layoutInflater.inflate(R.layout.list_item_serious_crime,parent,false)
+                else -> layoutInflater.inflate(R.layout.list_item_crime, parent, false)
+            }
+
             return CrimeHolder(view)
         }
 

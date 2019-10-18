@@ -21,6 +21,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        kapt {
+            arguments{
+                arg("room.schemaLocation","C:\\Projects\\Andoird programming BigNerdRanch 4th edition\\Challenges\\11_RoomDatabases\\schemas")
+            }
+        }
     }
 }
 

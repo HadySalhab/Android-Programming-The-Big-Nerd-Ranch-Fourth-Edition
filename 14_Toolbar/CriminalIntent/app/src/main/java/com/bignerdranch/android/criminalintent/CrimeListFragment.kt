@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,6 +22,12 @@ class CrimeListFragment : Fragment() {
 
     private lateinit var crimeRecyclerView: RecyclerView
     private var adapter: CrimeAdapter = CrimeAdapter(emptyList())
+    private lateinit var noCrimeVH:LinearLayout
+    private lateinit var noCrimeBtn: Button
+
+
+
+
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
     }
@@ -37,6 +45,8 @@ class CrimeListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+
     }
 
     override fun onCreateView(
@@ -45,6 +55,9 @@ class CrimeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
+
+        noCrimeVH = view.findViewById(R.id.viewholder_nocrime)
+        noCrimeBtn = view.findViewById(R.id.btn_add_crime)
 
         crimeRecyclerView =
                 view.findViewById(R.id.crime_recycler_view) as RecyclerView
@@ -56,6 +69,13 @@ class CrimeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        noCrimeBtn.setOnClickListener{
+            val crime = Crime()
+            crimeListViewModel.addCrime(crime)
+            noCrimeVH.setVisibility(View.INVISIBLE)
+            callbacks?.onCrimeSelected(crime.id)
+        }
+
 
     }
 
@@ -96,12 +116,18 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateUI(crimes: List<Crime>) {
+        when (crimes.size){
+            0->noCrimeVH.setVisibility(View.VISIBLE)
+            else->noCrimeVH.setVisibility(View.INVISIBLE)
+
+        }
         adapter?.let {
             it.crimes = crimes
         } ?: run {
             adapter = CrimeAdapter(crimes)
         }
         crimeRecyclerView.adapter = adapter
+
     }
 
     private inner class CrimeHolder(view: View)

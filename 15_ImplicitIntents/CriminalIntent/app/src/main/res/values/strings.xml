@@ -7,6 +7,7 @@
     <string name="new_crime">New Crime</string>
     <string name="crime_suspect_text">Choose Suspect</string>
     <string name="crime_report_text">Send Crime Report</string>
+    <string name="crime_call_suspect">Call Suspect</string>
     <string name="crime_report">%1$s!
         The crime was discovered on %2$s. %3$s, and %4$s
     </string>
@@ -16,4 +17,5 @@
     <string name="crime_report_suspect">the suspect is %s.</string>
     <string name="crime_report_subject">CriminalIntent Crime Report</string>
     <string name="send_report">Send crime report via</string>
+    <string name="call_suspect">Call Suspect</string>
 </resources>

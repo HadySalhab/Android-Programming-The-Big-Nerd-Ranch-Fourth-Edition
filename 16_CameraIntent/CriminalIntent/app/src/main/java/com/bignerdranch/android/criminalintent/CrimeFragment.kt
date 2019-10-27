@@ -14,11 +14,13 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bignerdranch.android.criminalintent.database.ImageDialog
 import java.io.File
 import java.util.*
 
@@ -26,8 +28,10 @@ private const val TAG = "CrimeFragment"
 private const val ARG_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
 private const val REQUEST_DATE = 0
+private const val DIALOG_IMAGE = "DialogImage"
 private const val REQUEST_CONTACT = 1
 private const val REQUEST_PHOTO = 2
+private const val REQUEST_IMAGE = 3
 private const val DATE_FORMAT = "EEE, MMM, dd"
 
 class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
@@ -42,6 +46,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     private lateinit var suspectButton: Button
     private lateinit var photoButton: ImageButton
     private lateinit var photoView: ImageView
+    private lateinit var observer:ViewTreeObserver
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
     }
@@ -68,6 +73,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         photoButton = view.findViewById(R.id.crime_camera) as ImageButton
         photoView = view.findViewById(R.id.crime_photo) as ImageView
 
+
         return view
     }
 
@@ -85,6 +91,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                         "com.bignerdranch.android.criminalintent.fileprovider",
                         photoFile)
                     updateUI()
+
                 }
             })
     }
@@ -129,6 +136,16 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 setTargetFragment(this@CrimeFragment, REQUEST_DATE)
                 show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
             }
+        }
+        photoView.setOnClickListener {
+            if(photoFile.exists()) {
+                ImageDialog.newInstance(getScaledBitmap(photoFile.path, requireActivity())).apply {
+                    show(this@CrimeFragment.requireFragmentManager(), DIALOG_IMAGE)
+                }
+            } else{
+                Toast.makeText(requireContext(),"Please take an image",Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         reportButton.setOnClickListener {
@@ -191,6 +208,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 startActivityForResult(captureImage, REQUEST_PHOTO)
             }
         }
+
     }
 
     override fun onStop() {
@@ -221,11 +239,13 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
             suspectButton.text = crime.suspect
         }
         updatePhotoView()
+
+
     }
 
     private fun updatePhotoView() {
         if (photoFile.exists()) {
-            val bitmap = getScaledBitmap(photoFile.path, requireActivity())
+            val bitmap = getScaledBitmap(photoFile.path, photoView.maxWidth,photoView.maxHeight)
             photoView.setImageBitmap(bitmap)
         } else {
             photoView.setImageDrawable(null)
